@@ -1,0 +1,50 @@
+
+0000000000400fce func4:
+  400fce: 48 83 ec 08                  	subq	$8, %rsp #分配内存
+  400fd2: 89 d0                        	movl	%edx, %eax # %eax = %edx = 14
+  400fd4: 29 f0                        	subl	%esi, %eax #%eax = 14
+  400fd6: 89 c1                        	movl	%eax, %ecx #ecx = 14
+  400fd8: c1 e9 1f                     	shrl	$31, %ecx #%ecx >>= 31, %ecx = 0
+  400fdb: 01 c8                        	addl	%ecx, %eax #%eax = 0
+  400fdd: d1 f8                        	sarl	%eax #%eax = 7
+  400fdf: 8d 0c 30                     	leal	(%rax,%rsi), %ecx #%ecx = 7
+  400fe2: 39 f9                        	cmpl	%edi, %ecx #第一个数和7比较
+  400fe4: 7e 0c                        	jle	12 <func4+0x24> #第一个数>=7,跳跃到0x400ff2
+  400fe6: 8d 51 ff                     	leal	-1(%rcx), %edx #第一个数 < 7,%edx = 6
+  400fe9: e8 e0 ff ff ff               	callq	-32 <func4>
+  400fee: 01 c0                        	addl	%eax, %eax
+  400ff0: eb 15                        	jmp	21 <func4+0x39>
+  400ff2: b8 00 00 00 00               	movl	$0, %eax # %eax = 0
+  400ff7: 39 f9                        	cmpl	%edi, %ecx 
+  400ff9: 7d 0c                        	jge	12 <func4+0x39> #%ecx >= %edi, 跳跃到0x401007
+  400ffb: 8d 71 01                     	leal	1(%rcx), %esi #%esi = %rcx + 1
+  400ffe: e8 cb ff ff ff               	callq	-53 <func4>
+  401003: 8d 44 00 01                  	leal	1(%rax,%rax), %eax
+  401007: 48 83 c4 08                  	addq	$8, %rsp
+  40100b: c3                 
+
+000000000040100c phase_4:
+  40100c: 48 83 ec 18                  	subq	$24, %rsp #分配内存
+  401010: 48 8d 4c 24 0c               	leaq	12(%rsp), %rcx 
+  401015: 48 8d 54 24 08               	leaq	8(%rsp), %rdx 
+  40101a: be cf 25 40 00               	movl	$4203983, %esi # "%d %d"
+  40101f: b8 00 00 00 00               	movl	$0, %eax 
+  401024: e8 c7 fb ff ff               	callq	-1081 <__isoc99_sscanf@plt>
+  401029: 83 f8 02                     	cmpl	$2, %eax #是否只能输入两个数
+  40102c: 75 07                        	jne	7 <phase_4+0x29> #如果不是，bomb
+  40102e: 83 7c 24 08 0e               	cmpl	$14, 8(%rsp) #第一个数与14比较
+  401033: 76 05                        	jbe	5 <phase_4+0x2e> #第一个数小于等于14时候，跳跃到0x40103a，否则bomb
+  401035: e8 00 04 00 00               	callq	1024 <explode_bomb> 
+  40103a: ba 0e 00 00 00               	movl	$14, %edx #%edx = 14，第三个入参
+  40103f: be 00 00 00 00               	movl	$0, %esi #第二个如参
+  401044: 8b 7c 24 08                  	movl	8(%rsp), %edi #第一个数作为第一个入参
+  401048: e8 81 ff ff ff               	callq	-127 <func4> #调用func4函数
+  40104d: 85 c0                        	testl	%eax, %eax #测试%eax是否为0
+  40104f: 75 07                        	jne	7 <phase_4+0x4c> #为0，跳跃到0x401058，bomb
+  401051: 83 7c 24 0c 00               	cmpl	$0, 12(%rsp) #测试第二个数是否为0
+  401056: 74 05                        	je	5 <phase_4+0x51> #为0，跳跃到0x40105d，否则bomb
+  401058: e8 dd 03 00 00               	callq	989 <explode_bomb>
+  40105d: 48 83 c4 18                  	addq	$24, %rsp
+  401061: c3                           	retq
+
+

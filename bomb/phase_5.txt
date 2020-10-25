@@ -1,0 +1,56 @@
+0000000000401062 phase_5:
+  401062: 53                           	pushq	%rbx #栈帧
+  401063: 48 83 ec 20                  	subq	$32, %rsp 
+  401067: 48 89 fb                     	movq	%rdi, %rbx 
+  40106a: 64 48 8b 04 25 28 00 00 00   	movq	%fs:40, %rax 
+  401073: 48 89 44 24 18               	movq	%rax, 24(%rsp)
+  401078: 31 c0                        	xorl	%eax, %eax 
+  40107a: e8 9c 02 00 00               	callq	668 <string_length> 
+  40107f: 83 f8 06                     	cmpl	$6, %eax #比较string长度是否为6
+  401082: 74 4e                        	je	78 <phase_5+0x70> #如果长度为6，跳到0x4010d2
+  401084: e8 b1 03 00 00               	callq	945 <explode_bomb> #长度不为6，bomb
+  401089: eb 47                        	jmp	71 <phase_5+0x70>
+
+
+  40108b: 0f b6 0c 03                  	movzbl	(%rbx,%rax), %ecx #%rax开始是为0，将输入的字符串保存在%ecx中 
+  40108f: 88 0c 24                     	movb	%cl, (%rsp) #字符串的某一位保存在栈顶
+  401092: 48 8b 14 24                  	movq	(%rsp), %rdx 
+  401096: 83 e2 0f                     	andl	$15, %edx 
+  401099: 0f b6 92 b0 24 40 00         	movzbl	4203696(%rdx), %edx 
+  4010a0: 88 54 04 10                  	movb	%dl, 16(%rsp,%rax)
+  4010a4: 48 83 c0 01                  	addq	$1, %rax
+  4010a8: 48 83 f8 06                  	cmpq	$6, %rax
+  4010ac: 75 dd                        	jne	-35 <phase_5+0x29> #如果没满6个，继续循环
+
+
+  4010ae: c6 44 24 16 00               	movb	$0, 22(%rsp) 
+  4010b3: be 5e 24 40 00               	movl	$4203614, %esi
+  4010b8: 48 8d 7c 24 10               	leaq	16(%rsp), %rdi
+  4010bd: e8 76 02 00 00               	callq	630 <strings_not_equal>
+  4010c2: 85 c0                        	testl	%eax, %eax
+  4010c4: 74 13                        	je	19 <phase_5+0x77> 
+  4010c6: e8 6f 03 00 00               	callq	879 <explode_bomb>
+  4010cb: 0f 1f 44 00 00               	nopl	(%rax,%rax)
+  4010d0: eb 07                        	jmp	7 <phase_5+0x77>
+  4010d2: b8 00 00 00 00               	movl	$0, %eax #返回值为0
+  4010d7: eb b2                        	jmp	-78 <phase_5+0x29> #跳到0x40108b
+  4010d9: 48 8b 44 24 18               	movq	24(%rsp), %rax
+  4010de: 64 48 33 04 25 28 00 00 00   	xorq	%fs:40, %rax
+  4010e7: 74 05                        	je	5 <phase_5+0x8c>
+  4010e9: e8 42 fa ff ff               	callq	-1470 <__stack_chk_fail@plt>
+  4010ee: 48 83 c4 20                  	addq	$32, %rsp
+  4010f2: 5b                           	popq	%rbx
+  4010f3: c3                           	retq
+
+000000000040131b string_length:
+  40131b: 80 3f 00                     	cmpb	$0, (%rdi) #第一个参数与0比较
+  40131e: 74 12                        	je	18 <string_length+0x17> #如果为0，跳到0x401332
+  401320: 48 89 fa                     	movq	%rdi, %rdx #在%rdx中保存第一个参数
+  401323: 48 83 c2 01                  	addq	$1, %rdx #%rdx += 1
+  401327: 89 d0                        	movl	%edx, %eax #将%rdx保存在返回值中
+  401329: 29 f8                        	subl	%edi, %eax #%eax = 1
+  40132b: 80 3a 00                     	cmpb	$0, (%rdx) #%rdx是否为0
+  40132e: 75 f3                        	jne	-13 <string_length+0x8> #不为0，返回0，为0，跳跃到0x401323
+  401330: f3 c3                        	rep		retq
+  401332: b8 00 00 00 00               	movl	$0, %eax #返回值为0
+  401337: c3                           	retq

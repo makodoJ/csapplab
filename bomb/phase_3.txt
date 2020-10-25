@@ -1,0 +1,37 @@
+0000000000400f43 phase_3:
+  400f43: 48 83 ec 18                  	subq	$24, %rsp #分配内存
+  400f47: 48 8d 4c 24 0c               	leaq	12(%rsp), %rcx #将栈指针+12并赋值给%rcx
+  400f4c: 48 8d 54 24 08               	leaq	8(%rsp), %rdx #将栈指针+8并赋值给%rdx
+  400f51: be cf 25 40 00               	movl	$4203983, %esi #将0x4025cf存贮在%esi中
+  400f56: b8 00 00 00 00               	movl	$0, %eax #将0存储在%eax中
+  400f5b: e8 90 fc ff ff               	callq	-880 <__isoc99_sscanf@plt> 
+  400f60: 83 f8 01                     	cmpl	$1, %eax #比较%eax与1的大小，即比较输入的数量
+  400f63: 7f 05                        	jg	5 <phase_3+0x27>  #如果大于1，跳跃到0x400f6a
+  400f65: e8 d0 04 00 00               	callq	1232 <explode_bomb> #否则，bomb
+  400f6a: 83 7c 24 08 07               	cmpl	$7, 8(%rsp) #%rsp+8的内存值是否大于7
+  400f6f: 77 3c                        	ja	60 <phase_3+0x6a> #大于的话，跳跃到0x400fad
+  400f71: 8b 44 24 08                  	movl	8(%rsp), %eax #将%rsp+8的值赋给%eax
+  400f75: ff 24 c5 70 24 40 00         	jmpq	*4203632(,%rax,8) #跳转至 0x402470 + 8 * %rax地址
+  400f7c: b8 cf 00 00 00               	movl	$207, %eax #给%eax赋值207
+  400f81: eb 3b                        	jmp	59 <phase_3+0x7b> #跳跃到0x400fbe
+  400f83: b8 c3 02 00 00               	movl	$707, %eax #给%eax赋值707
+  400f88: eb 34                        	jmp	52 <phase_3+0x7b> #跳跃到0x400fbe
+  400f8a: b8 00 01 00 00               	movl	$256, %eax #给%eax赋值256
+  400f8f: eb 2d                        	jmp	45 <phase_3+0x7b> #跳跃到0x400fbe
+  400f91: b8 85 01 00 00               	movl	$389, %eax #给%eax赋值389
+  400f96: eb 26                        	jmp	38 <phase_3+0x7b> #跳跃到0x400fbe
+  400f98: b8 ce 00 00 00               	movl	$206, %eax #给%eax赋值206
+  400f9d: eb 1f                        	jmp	31 <phase_3+0x7b> #跳跃到0x400fbe
+  400f9f: b8 aa 02 00 00               	movl	$682, %eax #给%eax赋值682
+  400fa4: eb 18                        	jmp	24 <phase_3+0x7b> #跳跃到0x400fbe
+  400fa6: b8 47 01 00 00               	movl	$327, %eax #给%eax赋值327
+  400fab: eb 11                        	jmp	17 <phase_3+0x7b> #跳跃到0x400fbe
+  400fad: e8 88 04 00 00               	callq	1160 <explode_bomb> #bomb
+  400fb2: b8 00 00 00 00               	movl	$0, %eax #将0赋值给%eax
+  400fb7: eb 05                        	jmp	5 <phase_3+0x7b> #跳跃到0x400fbe
+  400fb9: b8 37 01 00 00               	movl	$311, %eax
+  400fbe: 3b 44 24 0c                  	cmpl	12(%rsp), %eax #将%rsp+12的值与%eax比较
+  400fc2: 74 05                        	je	5 <phase_3+0x86> #相等的话，跳跃到0x400fc9
+  400fc4: e8 71 04 00 00               	callq	1137 <explode_bomb> #不等的话，bomb
+  400fc9: 48 83 c4 18                  	addq	$24, %rsp #释放内存
+  400fcd: c3                           	retq

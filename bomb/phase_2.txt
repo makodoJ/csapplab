@@ -1,0 +1,26 @@
+0000000000400efc phase_2:
+  400efc: 55                           	pushq	%rbp # 栈帧
+  400efd: 53                           	pushq	%rbx # 栈帧
+  400efe: 48 83 ec 28              subq	$40, %rsp #将指针减40，分配空间
+  400f02: 48 89 e6                  movq	%rsp, %rsi #将指针作为第二个参数
+  400f05: e8 52 05 00 00        callq	1362 <read_six_numbers>	#调用函数
+  400f0a: 83 3c 24 01              cmpl	$1, (%rsp) #将栈指针与1相比
+  400f0e: 74 20                         je	32 <phase_2+0x34> #若相等，则跳跃到0x400f30
+  400f10: e8 25 05 00 00        callq	1317 <explode_bomb> #若不等，则bomb
+  400f15: eb 19                        	jmp	25 <phase_2+0x34> #跳跃到0x400f30
+  400f17: 8b 43 fc                    movl	-4(%rbx), %eax #将%rbx-4后，将其内存中的值存在%eax中
+  400f1a: 01 c0                        	addl	%eax, %eax #将%eax中的值*2
+  400f1c: 39 03                        cmpl	%eax, (%rbx) #比较%eax和(%rbx)
+  400f1e: 74 05                        	je	5 <phase_2+0x29> #如果相等 跳跃到0x400f25
+  400f20: e8 15 05 00 00        callq	1301 <explode_bomb> #如果不等， bomb
+  400f25: 48 83 c3 04             addq	$4, %rbx #将%rbx加4，即取下次判定测量值
+  400f29: 48 39 eb                  cmpq	%rbp, %rbx #比较%rbp和%rbx， %rbp为最大数，此题中为6
+  400f2c: 75 e9                        jne	-23 <phase_2+0x1b> #如果%rbx != %rbp, 即还未到达6个数， 跳跃到0x400f17
+  400f2e: eb 0c                        jmp	12 <phase_2+0x40> #如果已经到达6个数，跳跃到0x400f3c结束循环
+  400f30: 48 8d 5c 24 04       leaq	4(%rsp), %rbx #取指针+4后的值，将其赋值给%rbx
+  400f35: 48 8d 6c 24 18        leaq	24(%rsp), %rbp #取指针+24后的值，将其赋值给%rbp
+  400f3a: eb db                        jmp	-37 <phase_2+0x1b> #跳跃到0x400f17
+  400f3c: 48 83 c4 28             addq	$40, %rsp #释放分配的内存
+  400f40: 5b                           	popq	%rbx 
+  400f41: 5d                           	popq	%rbp
+  400f42: c3                           	retq
